@@ -7,10 +7,10 @@ pipeline {
 
     environment {
         registryCredential = 'ecr:us-east-1:awscreds'
-        appRegistry = "843576970817.dkr.ecr.us-east-1.amazonaws.com/vprofileappimg"
-        vprofileRegistry = "https://843576970817.dkr.ecr.us-east-1.amazonaws.com"
-        cluster = "jenkinscluster6758"
-        service = "jenkinscluster6758service"
+        appRegistry = "843576970817.dkr.ecr.us-east-1.amazonaws.com/jenkins-ci-cd-docker-image"
+        sampleAppRegistry = "https://843576970817.dkr.ecr.us-east-1.amazonaws.com"
+        cluster = "Jenkins-CI-CD-ECS-Cluster"
+        service = "Jenkins-CI-CD-Service"
     }
     stages {
         stage('Fetch code'){
@@ -79,7 +79,7 @@ pipeline {
         stage('Upload App Image') {
             steps{
                 script {
-                    docker.withRegistry( vprofileRegistry, registryCredential ) {
+                    docker.withRegistry( sampleAppRegistry, registryCredential ) {
                         dockerImage.push("$BUILD_NUMBER")
                         dockerImage.push('latest')
                     }
