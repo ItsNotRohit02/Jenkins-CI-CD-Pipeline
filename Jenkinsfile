@@ -1,9 +1,11 @@
 pipeline {
     agent any
+    
     tools {
         maven "MAVEN3"
         jdk "OracleJDK8"
     }
+
     stages {
         stage('Fetch code') {
             steps {
@@ -54,6 +56,7 @@ pipeline {
                 }
             }
         }
+
         stage('Quality Gate') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
