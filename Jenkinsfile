@@ -56,15 +56,6 @@ pipeline {
                 }
             }
         }
-        
-        // stage('Quality Gate') {
-        //     steps {
-        //         timeout(time: 1, unit: 'HOURS') {
-        //             // Set the pipeline to UNSTABLE if Quality Gate fails
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
 
 
         stage('Build App Image') {
