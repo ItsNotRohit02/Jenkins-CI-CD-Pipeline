@@ -1,5 +1,7 @@
 pipeline {
+
     agent any
+
     tools {
 	    maven "MAVEN3"
 	    jdk "OracleJDK8"
@@ -12,13 +14,13 @@ pipeline {
         cluster = "Jenkins-CI-CD-ECS-Cluster"
         service = "Jenkins-CI-CD-Service"
     }
+
     stages {
         stage('Fetch code'){
             steps {
                 git branch: 'jenkins-cd', url: 'https://github.com/ItsNotRohit02/Jenkins-CI-CD-Pipeline.git'
             }
         }
-
 
         stage('Test'){
             steps {
@@ -53,6 +55,14 @@ pipeline {
                     -Dsonar.junit.reportsPath=target/surefire-reports/ \
                     -Dsonar.jacoco.reportsPath=target/jacoco.exec \
                     -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
