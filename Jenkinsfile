@@ -7,7 +7,7 @@ pipeline {
     // stages {
     //     stage('Fetch code') {
     //         steps {
-    //             git branch: 'jenkins-ci', url: 'https://github.com/ItsNotRohit02/Sample-WebApp.git'
+    //             git branch: 'jenkins-ci', url: 'https://github.com/ItsNotRohit02/Jenkins-CI-CD-Pipeline.git'
     //         }
     //     }
 
