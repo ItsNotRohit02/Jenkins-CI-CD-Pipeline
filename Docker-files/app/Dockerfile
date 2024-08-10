@@ -1,5 +1,5 @@
 FROM tomcat:8-jre11
-LABEL "Project"="JenkinsCICD"
+LABEL "Project"="Jenkins-CI-CD"
 LABEL "Author"="Rohit"
 
 RUN rm -rf /usr/local/tomcat/webapps/*

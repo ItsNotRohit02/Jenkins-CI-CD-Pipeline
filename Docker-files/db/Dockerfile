@@ -1,6 +1,6 @@
 FROM mysql:8.0.33
-LABEL "Project"="Vprofile"
-LABEL "Author"="Imran"
+LABEL "Project"="Jenkins-CI-CD"
+LABEL "Author"="Rohit"
 
 ENV MYSQL_ROOT_PASSWORD="vprodbpass"
 ENV MYSQL_DATABASE="accounts"

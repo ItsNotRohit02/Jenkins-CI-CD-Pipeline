@@ -1,42 +1,42 @@
 pipeline {
     agent any
     tools {
-        maven "MAVEN3"
-        jdk "OracleJDK8"
+	    maven "MAVEN3"
+	    jdk "OracleJDK8"
+	}
+
+    environment {
+        registryCredential = 'ecr:us-east-1:awscreds'
+        appRegistry = "843576970817.dkr.ecr.us-east-1.amazonaws.com/vprofileappimg"
+        vprofileRegistry = "https://843576970817.dkr.ecr.us-east-1.amazonaws.com"
+        cluster = "jenkinscluster6758"
+        service = "jenkinscluster6758service"
     }
     stages {
-        // stage('Fetch code') {
-        //     steps {
-        //         git branch: 'jenkins-ci', url: 'https://github.com/ItsNotRohit02/Sample-WebApp.git'
-        //     }
-        // }
-
-        
-
-        stage('Build') {
+        stage('Fetch code'){
             steps {
-                sh 'mvn clean install -DskipTests'
-            }
-            post {
-                success {
-                    echo "Now Archiving."
-                    archiveArtifacts artifacts: '**/*.war'
-                }
+                git branch: 'jenkins-cd', url: 'https://github.com/ItsNotRohit02/Jenkins-CI-CD-Pipeline.git'
             }
         }
 
-        stage('Test') {
+
+        stage('Test'){
             steps {
                 sh 'mvn test'
             }
         }
 
-        stage('Checkstyle Analysis') {
+        stage ('Checkstyle Analysis'){
             steps {
                 sh 'mvn checkstyle:checkstyle'
             }
+            post {
+                success {
+                    echo 'Generated Analysis Result'
+                }
+            }
         }
-
+    
         stage('Sonar Analysis') {
             environment {
                 scannerHome = tool 'sonar4.7'
@@ -57,23 +57,41 @@ pipeline {
             }
         }
         
-        stage("UploadArtifact"){
+        // stage('Quality Gate') {
+        //     steps {
+        //         timeout(time: 1, unit: 'HOURS') {
+        //             // Set the pipeline to UNSTABLE if Quality Gate fails
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
+
+
+        stage('Build App Image') {
+            steps {
+                script {
+                    dockerImage = docker.build(appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                }
+
+            }
+        }
+
+        stage('Upload App Image') {
             steps{
-                nexusArtifactUploader(
-                  nexusVersion: 'nexus3',
-                  protocol: 'http',
-                  nexusUrl: '192.168.33.11:8081',
-                  groupId: 'QA',
-                  version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
-                  repository: 'sample-repo',
-                  credentialsId: 'nexuslogin',
-                  artifacts: [
-                    [artifactId: 'SampleWebApp',
-                     classifier: '',
-                     file: 'target/Sample-v1.war',
-                     type: 'war']
-                  ]
-               )
+                script {
+                    docker.withRegistry( vprofileRegistry, registryCredential ) {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to ECS') {
+            steps {
+                withAWS(credentials: 'awscreds', region: 'us-east-1') {
+                    sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+                }
             }
         }
     }
