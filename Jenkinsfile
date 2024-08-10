@@ -4,12 +4,12 @@ pipeline {
         maven "MAVEN3"
         jdk "OracleJDK8"
     }
-    // stages {
-    //     stage('Fetch code') {
-    //         steps {
-    //             git branch: 'jenkins-ci', url: 'https://github.com/ItsNotRohit02/Jenkins-CI-CD-Pipeline.git'
-    //         }
-    //     }
+    stages {
+        // stage('Fetch code') {
+        //     steps {
+        //         git branch: 'jenkins-ci', url: 'https://github.com/ItsNotRohit02/Jenkins-CI-CD-Pipeline.git'
+        //     }
+        // }
 
         stage('Build') {
             steps {
