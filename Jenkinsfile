@@ -5,11 +5,11 @@ pipeline {
         jdk "OracleJDK8"
     }
     stages {
-        // stage('Fetch code') {
-        //     steps {
-        //         git branch: 'jenkins-ci', url: 'https://github.com/ItsNotRohit02/Jenkins-CI-CD-Pipeline.git'
-        //     }
-        // }
+        stage('Fetch code') {
+            steps {
+                git branch: 'jenkins-ci', url: 'https://github.com/ItsNotRohit02/Jenkins-CI-CD-Pipeline.git'
+            }
+        }
 
         stage('Build') {
             steps {
@@ -51,6 +51,13 @@ pipeline {
                     -Dsonar.junit.reportsPath=target/surefire-reports/ \
                     -Dsonar.jacoco.reportsPath=target/jacoco.exec \
                     -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
