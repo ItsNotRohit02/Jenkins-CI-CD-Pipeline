@@ -1,20 +1,32 @@
 # Jenkins CI/CD Pipeline Project
 
-This project implements a robust Continuous Integration and Continuous Delivery (CI/CD) pipeline for a Java-based web application using Jenkins, Docker, and AWS services. The pipeline automates the build, test, and deployment processes, ensuring efficient and reliable software delivery.
+This repository contains the implementation of a Continuous Integration and Continuous Delivery (CI/CD) pipeline for a Java-based web application using Jenkins, Docker, and AWS services. The pipeline automates the build, test, and deployment processes, ensuring efficient and reliable software delivery.
 
 ## Key Features
 
-- Multi-stage Jenkins pipeline for automated build, test, and deployment
-- Integration with SonarQube for continuous code quality inspection
-- Artifact management using Nexus Repository Manager
-- Docker containerization with images pushed to Amazon Elastic Container Registry (ECR)
-- Deployment to Amazon Elastic Container Service (ECS) for container orchestration
+- **Multi-Stage Jenkins Pipeline**: Automates the entire process from code fetching, building, testing, code quality analysis, to deployment.
+- **SonarQube Integration**: Continuous code quality inspection is conducted using SonarQube to ensure that the code meets the required quality standards.
+- **Artifact Management**: Artifacts generated from the build are stored and managed in Nexus Repository Manager.
+- **Docker Containerization**: The application is containerized using Docker, with images pushed to Amazon Elastic Container Registry (ECR).
+- **Deployment to AWS ECS**: The Docker images are deployed to Amazon Elastic Container Service (ECS) for scalable and reliable container orchestration.
 
 ## Technologies Used
 
-- Jenkins
-- Docker
-- AWS Services (Elastic Container Registry, Elastic Container Service)
-- Maven
-- SonarQube
-- Nexus Repository Manager
+- **Jenkins**: Orchestrates the CI/CD pipeline.
+- **Maven**: Handles the build and dependency management.
+- **SonarQube**: Performs continuous code quality inspection.
+- **Nexus Repository Manager**: Stores and manages build artifacts.
+- **Docker**: Containerizes the application.
+- **AWS ECR**: Stores Docker images.
+- **AWS ECS**: Deploys and manages Docker containers.
+
+## Pipeline Overview
+
+1. **Fetch Code**: The source code is fetched from the GitHub repository.
+2. **Test**: The application is tested using Maven.
+3. **Checkstyle Analysis**: Code style is analyzed using Maven's Checkstyle plugin.
+4. **SonarQube Analysis**: Code quality is analyzed using SonarQube.
+5. **Quality Gate**: The pipeline waits for SonarQube's quality gate results. If the quality gates are not passed, the pipeline is aborted.
+6. **Build App Image**: A Docker image of the application is built.
+7. **Upload App Image**: The Docker image is pushed to AWS Elastic Container Registry (ECR).
+8. **Deploy to ECS**: The Docker image is deployed to Amazon Elastic Container Service (ECS).
